@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/06/21 12:38:45 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/06/21 13:03:02 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ char    *read_file(int fd, char *file_content) // static_var
             return (NULL);
         }
         buffer[bytesRead] = '\0';
-        // file_content = ft_free(file_content, buffer);
-        // if (ft_strchr(buffer, '\n'))
-        //     break ;
+        file_content = ft_free(file_content, buffer);
+        if (ft_strchr(buffer, '\n'))
+            break ;
     }
     free (buffer);
     return (file_content);
