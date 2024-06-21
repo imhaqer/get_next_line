@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:15:31 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/06/20 17:13:47 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:44:45 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,9 @@
 
 char    *get_next_line(int fd);
 char    *read_file(int fd, char *file_content);
+char    *ft_append(char *buffer, char *stash);
+char    *ft_line(char *buffer);
+char    *left_line(char *buffer);
+
 
 #endif
