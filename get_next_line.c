@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/06/21 15:03:14 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:06:10 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,25 +43,25 @@ char *ft_line(char *buffer)
     }
     return (line);
 }
-char    *remaining_line(char *buffer)  // the same buffer
+char    *left_line(char *buffer)  // the same buffer
 {
-    char *remaining;
+    char *left;
     int i = 0; 
     int j = 0;
 
     while(buffer[i] && buffer[i] != '\n')
         i++;
     
-    remaining = calloc(strlen(buffer) - i + 1, sizeof(char));
+    left = calloc(strlen(buffer) - i + 1, sizeof(char));
     i++; // skipping '\n'
     while(buffer[i])
     {
-        remaining[j] = buffer[i];
+        left[j] = buffer[i];
         j++;
         i++;
     }
     free(buffer);
-    return (remaining);
+    return (left);
 }
 char    *read_file(int fd, char *file_content)
 {
