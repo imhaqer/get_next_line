@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -42,5 +42,6 @@ int main()
     free(buffer);
     close (fd);
     return 0;
-}
+}*/
+
 
