@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/06/21 15:20:05 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/06/24 12:46:59 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char    *ft_append(char *buffer, char *stash)
 {
     char *temp;
 
-    temp = strjoin(buffer, stash);
+    temp = ft_strjoin(buffer, stash);
     free(buffer);
     return (temp);
 }
@@ -29,7 +29,7 @@ char *ft_line(char *buffer)
     while(buffer[i] && buffer[i] != '\n')
         i++;
     
-    line = calloc(i + 2, sizeof(char));
+    line = ft_calloc(i + 2, sizeof(char));
 
     i = 0;
     while (buffer[i] && buffer[i] != '\n')
@@ -37,7 +37,7 @@ char *ft_line(char *buffer)
         line[i] = buffer[i];
         i++;
     }
-    if (buffer[i] == '\n')
+    if (buffer[i] && buffer[i] == '\n')
     {
         line[i++] = '\n';
     }
@@ -52,7 +52,13 @@ char    *left_line(char *buffer)  // the same buffer
     while(buffer[i] && buffer[i] != '\n')
         i++;
     
-    left = calloc(strlen(buffer) - i + 1, sizeof(char));
+    if (!buffer[i])
+	{
+		free(buffer);
+		return (NULL);
+	}
+    
+    left = ft_calloc(ft_strlen(buffer) - i + 1, sizeof(char));
     i++; // skipping '\n'
     while(buffer[i])
     {
@@ -69,19 +75,20 @@ char    *read_file(int fd, char *file_content)
     int bytesRead;
 
     
-    buffer = calloc(BUFFER_SIZE + 1, sizeof(char));
+    buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
     if (!buffer)
     return (NULL);
-
-    while (bytesRead = (fd, buffer, BUFFER_SIZE))
+    bytesRead = 1;
+    while (bytesRead > 0)
     {
-        // if (bytesRead == -1)
-        // {
-        //     free(buffer);
-        //     return (NULL);
-        // }
+        bytesRead = read(fd, buffer, BUFFER_SIZE);
+        if (bytesRead == -1)
+        {
+            free(buffer);
+            return (NULL);
+        }
         buffer[bytesRead] = '\0';
-        file_content = ft_append(buffer, file_content);
+        file_content = ft_append( file_content, buffer);
         if (ft_strchr(buffer, '\n'))
             break ;
     }
@@ -102,6 +109,4 @@ char    *get_next_line(int fd)
     buffer = left_line(buffer);
 
     return (line);
-    
-    
 }
