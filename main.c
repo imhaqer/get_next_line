@@ -7,16 +7,12 @@ int main()
 
     fd = open("text.txt", O_RDONLY);
     if (fd == -1) 
-    {
-        
         return -1;
-    }
-    line = get_next_line(fd);
 
-    while(line > 0)
+    while((line = get_next_line(fd)) > 0)
     {
-        printf("%s", line);
-        line = get_next_line(fd);
+         
+       printf("%s", line); 
     }
         
     close(fd);

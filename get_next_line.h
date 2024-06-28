@@ -13,13 +13,13 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#define BUFFER_SIZE 4
+#define BUFFER_SIZE 15
 
 # include <stdlib.h>
 # include <sys/types.h>
-# include <sys/uio.h>
+// # include <sys/uio.h>
 # include <unistd.h>
-// # include <string.h>
+# include <string.h>
 # include  <fcntl.h>
 
 

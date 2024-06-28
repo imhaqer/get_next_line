@@ -32,7 +32,7 @@ char    *left_line(char *buffer)  // the same buffer
     
     if (!buffer[i])
 	{
-		free(buffer);
+		//free(buffer);
 		return (NULL);
 	}
     
@@ -42,7 +42,7 @@ char    *left_line(char *buffer)  // the same buffer
     {
         left[j++] = buffer[i++];
     }
-    free(buffer);
+    //free(buffer);
     return (left);
 }
 char *ft_line(char *buffer)
@@ -63,10 +63,11 @@ char *ft_line(char *buffer)
         line[i] = buffer[i];
         i++;
     }
-    if (buffer[i] && buffer[i] == '\n')
+    if (buffer[i] == '\n')
     {
         line[i++] = '\n';
     }
+    line[i] = '\0';
     return (line);
 }
 
@@ -76,20 +77,19 @@ char    *read_file(int fd, char *file_content)
     int bytesRead;
 
     if (!file_content)
-        file_content = ft_calloc(1,1);
+        file_content = ft_calloc(1,sizeof(char)); // allocate an empty string 1st call
     
     buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-    bytesRead = 1;
-    while (bytesRead > 0)
+    while ((bytesRead = read(fd, buffer, BUFFER_SIZE)) > 0)
     {
-        bytesRead = read(fd, buffer, BUFFER_SIZE);
         if (bytesRead == -1)
         {
             free(buffer);
             return (NULL);
         }
         buffer[bytesRead] = '\0';
-        file_content = ft_append(file_content, buffer);
+    // static var
+        file_content = ft_append(file_content, buffer); 
         if (ft_strchr(buffer, '\n'))
             break ;
     }
@@ -99,13 +99,12 @@ char    *read_file(int fd, char *file_content)
 
 
 
-
 char    *get_next_line(int fd)
 {
     char *line;
     static char *buffer; 
 
-    if( fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+    if( fd < 0 || BUFFER_SIZE <= 0 )
         return NULL;
 
     buffer = read_file(fd, buffer);
@@ -114,8 +113,8 @@ char    *get_next_line(int fd)
         // free(buffer);
         return NULL;
     line = ft_line(buffer);
-    buffer = left_line(buffer);
-
+    buffer = left_line(buffer); // the left line deons't contain '\n'
+    // buffer gets updated and goes back again to file_content 
     return (line);
 }
 
