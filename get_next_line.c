@@ -13,44 +13,47 @@
 #include "get_next_line.h"
 
 
-char    *ft_append(char *buffer, char *stash)
+char	*ft_append(char *buffer, char *buf)
 {
-    char *temp;
+	char	*temp;
 
-    temp = ft_strjoin(buffer, stash);
-    free(buffer);
-    return (temp);
+	temp = ft_strjoin(buffer, buf);
+	free(buffer);
+	return (temp);
 }
 char    *left_line(char *buffer)  // the same buffer
 {
     char *left;
-    int i = 0; 
-    int j = 0;
+    int i; 
+    int j;
+    
 
+    i = 0;
     while(buffer[i] && buffer[i] != '\n')
         i++;
-    
     if (!buffer[i])
 	{
-		//free(buffer);
+		free(buffer);
 		return (NULL);
 	}
-    
-    left = ft_calloc(ft_strlen(buffer) - i + 1, sizeof(char));
+
+    left = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
     i++; // skipping '\n'
+    j = 0;
     while(buffer[i])
     {
         left[j++] = buffer[i++];
     }
-    //free(buffer);
+    free(buffer);
     return (left);
 }
+
 char *ft_line(char *buffer)
 {
     char *line;
     
     int i = 0;
-    if (!buffer)
+    if (!buffer[i])
         return NULL;
     while(buffer[i] && buffer[i] != '\n')
         i++;
@@ -63,7 +66,7 @@ char *ft_line(char *buffer)
         line[i] = buffer[i];
         i++;
     }
-    if (buffer[i] == '\n')
+    if (buffer [i] && buffer[i] == '\n')
     {
         line[i++] = '\n';
     }
@@ -80,8 +83,10 @@ char    *read_file(int fd, char *file_content)
         file_content = ft_calloc(1,sizeof(char)); // allocate an empty string 1st call
     
     buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-    while ((bytesRead = read(fd, buffer, BUFFER_SIZE)) > 0)
+    bytesRead = 1;
+    while (bytesRead > 0)
     {
+        bytesRead = read(fd, buffer, BUFFER_SIZE);
         if (bytesRead == -1)
         {
             free(buffer);
@@ -104,13 +109,12 @@ char    *get_next_line(int fd)
     char *line;
     static char *buffer; 
 
-    if( fd < 0 || BUFFER_SIZE <= 0 )
+    if(fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
         return NULL;
 
     buffer = read_file(fd, buffer);
 
     if (!buffer)
-        // free(buffer);
         return NULL;
     line = ft_line(buffer);
     buffer = left_line(buffer); // the left line deons't contain '\n'
