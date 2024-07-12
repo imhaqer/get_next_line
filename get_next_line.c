@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/06 20:09:15 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/12 19:03:44 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ char	*ft_append(char *file_content, char *buffer)
 	char	*temp;
 
 	temp = ft_strjoin(file_content, buffer);
-	// if (!temp)
-	// 	return NULL;
+	if (!temp)
+		return NULL;
 	free(file_content);
 	return (temp);
 }
@@ -81,23 +81,42 @@ char	*read_line(int fd, char *file_content)
 {
 	int		byte_read;
 	char	*buffer;
+	char	*temp;
 
 	if (!file_content)
 		file_content = ft_calloc(1, sizeof(char));
+	if(!file_content)
+		return NULL;
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
+	{	
+		free(file_content);
+		file_content = NULL;
 		return (NULL);
+	}
 	byte_read = 1;
 	while (byte_read > 0)
 	{
 		byte_read = read(fd, buffer, BUFFER_SIZE);
-		if (byte_read == -1)
+		if (byte_read == -1 || (byte_read == 0 && file_content[0] == '\0'))
 		{
 			free(buffer);
+			free(file_content);
+			file_content = NULL;
 			return (NULL);
 		}
 		buffer[byte_read] = '\0';
+		temp = file_content;
 		file_content = ft_append(file_content, buffer);
+		if (!file_content)
+		{
+			free(temp);
+			free(buffer);
+			buffer = NULL;
+			return NULL;
+		}
+		if (temp)
+		free(temp);
 		if (strchr(buffer, '\n'))
 			break;
 	}
@@ -110,16 +129,26 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 )		
+	{
+		if (buffer)
 		{
 			free (buffer);
-			buffer = NULL;
-			return (NULL);
+			buffer = NULL;	
 		}
+		return (NULL);
+	}
+	
 	buffer = read_line(fd, buffer);
 	if (!buffer)
 		return (NULL);
 	line = ft_line(buffer);
+	if (!line)
+	{	
+		free(buffer);
+		buffer = NULL;	
+		return NULL;
+	}
 	buffer = remaining_buffer(buffer);
 	return (line);
 }
