@@ -6,21 +6,18 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/16 18:44:04 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:57:06 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_append(char *file_content, char *buffer)
+static char	*ft_free(char **str)
 {
-	char	*temp;
-
-	temp = ft_strjoin(file_content, buffer);
-	if (!temp)
-		return NULL;
-	free(file_content);
-	return (temp);
+	if (*str)
+		free(*str);
+	*str = NULL;
+	return (NULL);
 }
 
 char	*remaining_buffer(char *buffer)
