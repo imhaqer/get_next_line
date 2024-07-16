@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/12 19:03:44 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/16 18:44:04 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,51 +77,25 @@ char	*ft_line(char *buffer)
 	return (line);
 }
 
-char	*read_line(int fd, char *file_content)
+static int	read_line(int fd, char **file_content, char **buffer)
 {
-	int		byte_read;
-	char	*buffer;
 	char	*temp;
+	int		bytes_read;
 
-	if (!file_content)
-		file_content = ft_calloc(1, sizeof(char));
-	if(!file_content)
-		return NULL;
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!buffer)
-	{	
-		free(file_content);
-		file_content = NULL;
-		return (NULL);
-	}
-	byte_read = 1;
-	while (byte_read > 0)
+	bytes_read = 1;
+	while (!ft_strchr(*file_content, '\n') && (bytes_read > 0))
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
-		if (byte_read == -1 || (byte_read == 0 && file_content[0] == '\0'))
-		{
-			free(buffer);
-			free(file_content);
-			file_content = NULL;
-			return (NULL);
-		}
-		buffer[byte_read] = '\0';
-		temp = file_content;
-		file_content = ft_append(file_content, buffer);
-		if (!file_content)
-		{
-			free(temp);
-			free(buffer);
-			buffer = NULL;
-			return NULL;
-		}
-		if (temp)
-		free(temp);
-		if (strchr(buffer, '\n'))
-			break;
+		bytes_read = read(fd, *buffer, BUFFER_SIZE)
+		if (buffer == -1)
+				return (-1);
+		(*buffer)[bytes_read] = '\0';
+		temp = ft_strjoin(*file_content, *buffer);
+		if (!temp)
+			return (-1);
+		ft_free(file_content);
+		*stash = temp;
 	}
-	free(buffer);
-	return (file_content);
+	return (0);
 }
 
 char	*get_next_line(int fd)
