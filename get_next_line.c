@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/16 19:49:42 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/16 20:07:43 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,33 +20,30 @@ static char	*ft_free(char **str)
 	return (NULL);
 }
 
-char	*remaining_stash(char *buffer)
+char	*remaining_stash(char *stash)
 {
 	char	*line;
-	int	i;
-	int	j;
+	size_t	i;
+	size_t	j;
+
+	if (!stash)
+		return (NULL);
+	if (!stash[0] == '\0') //EOF-check
+		return (ft_free(&stash)); 
 
 	i = 0;
-	// if (!buffer)
-	// 	return (NULL);
-	while (buffer[i] && buffer[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 		i++;
-    if (!buffer[i])
-	{
-		free(buffer);
-		return (NULL);
-	}
-	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
-	// if (!line)
-	// {
-	// 	free (buffer);
-	// 	return (NULL);
-	// }
-	i++;
+	line = ft_calloc((ft_strlen(stash) - i + 1), sizeof(char));
+	if (!line)
+		return (ft_free(&stash));
 	j = 0;
-	while (buffer[i])
+	while (stash[i] != '\0')
 		line[j++] = buffer[i++];
-	free(buffer);
+	line[i] = '\0';
+	if (line[0] == '\0')
+		ft_free(&line);
+	ft_free(&stash);
 	return (line);
 }
 
@@ -58,13 +55,13 @@ static char	*extract_line(char *stash)
 	if (!stash || stash[0] == '\0')
 		return (NULL);
 	i = 0;
-	while (stash[i] && stash[i] != '\n')
+	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
 	line = ft_calloc(i + 1, sizeof(char));
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (stash[i] && stash[i] != '\n')
+	while (stash[i] != '\0' && stash[i] != '\n')
 	{
 		line[i] = stash[i];
 		i++;
