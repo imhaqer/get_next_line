@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/16 18:57:06 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:31:11 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*ft_free(char **str)
 	return (NULL);
 }
 
-char	*remaining_buffer(char *buffer)
+char	*remaining_stash(char *buffer)
 {
 	char	*line;
 	int	i;
@@ -50,7 +50,7 @@ char	*remaining_buffer(char *buffer)
 	return (line);
 }
 
-char	*ft_line(char *buffer)
+char	*extracted_line(char *buffer)
 {
 	char	*line;
 	int	i;
@@ -95,32 +95,28 @@ static int	read_line(int fd, char **file_content, char **buffer)
 	return (0);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd);
 {
-	static char	*buffer;
-	char		*line;
+	static char	*file_content;
+	char		*buffer;
+	char		line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 )		
-	{
-		if (buffer)
-		{
-			free (buffer);
-			buffer = NULL;	
-		}
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	}
-	
-	buffer = read_line(fd, buffer);
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
-		return (NULL);
-	line = ft_line(buffer);
-	if (!line)
-	{	
-		free(buffer);
-		buffer = NULL;	
-		return NULL;
+		return (ft_free(&file_content));
+	if (read_line(fd, &file_content, &buffer) == -1)
+	{
+		ft_free(&buffer);
+		return (ft_free(&file_content));
 	}
-	buffer = remaining_buffer(buffer);
+	ft_free(&buffer);
+	line = extracted_line(stash);
+	if (!line)
+		return (ft_free(&stash));
+	file_content = remaining_stash(stash);
 	return (line);
 }
+
 
