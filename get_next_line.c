@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/20 15:18:20 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/17 15:50:23 by hahamdan         ###   ########.fr       */
+/*   Created: 2024/07/17 18:37:00 by hahamdan          #+#    #+#             */
+/*   Updated: 2024/07/19 16:18:54 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,14 @@ static char	*ft_free(char **str)
 	return (NULL);
 }
 
-static char	*extract_line(char *stash)
+static char	*cut_line(char *stash)
 {
 	char	*line;
 	int		i;
 
 	if (!stash || stash[0] == '\0')
 		return (NULL);
-	i = 0;
-	while (stash[i] != '\0' && stash[i] != '\n')
-		i++;
-	line = (char *)malloc((i + 1) * sizeof(char));
+	line = (char *)malloc((until_nl(stash) + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
 	i = 0;
@@ -40,15 +37,15 @@ static char	*extract_line(char *stash)
 		i++;
 	}
 	if (stash[i] == '\n')
-	{	
-		line[i] = '\n';
+	{
+		line[i] = stash[i];
 		i++;
 	}
 	line[i] = '\0';
 	return (line);
 }
 
-static char	*remaining_stash(char *stash)
+static char	*remain_stash(char *stash)
 {
 	char	*line;
 	size_t	i;
@@ -57,24 +54,20 @@ static char	*remaining_stash(char *stash)
 	if (!stash)
 		return (NULL);
 	if (stash[0] == '\0')
-		return (ft_free(&stash)); 
-
-	i = 0;
-	while (stash[i] && stash[i] != '\n')
-		i++;
+		return (ft_free(&stash));
+	i = until_nl(stash);
 	line = (char *)malloc((ft_strlen(stash) - i + 1) * sizeof(char));
 	if (!line)
 		return (ft_free(&stash));
 	j = 0;
 	while (stash[i] != '\0')
 		line[j++] = stash[i++];
-	line[i] = '\0';
+	line[j] = '\0';
 	if (line[0] == '\0')
 		ft_free(&line);
 	ft_free(&stash);
 	return (line);
 }
-
 
 static int	read_line(int fd, char **file_content, char **buffer)
 {
@@ -86,7 +79,7 @@ static int	read_line(int fd, char **file_content, char **buffer)
 	{
 		bytes_read = read(fd, *buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
-				return (-1);
+			return (-1);
 		(*buffer)[bytes_read] = '\0';
 		temp = ft_strjoin(*file_content, *buffer);
 		if (!temp)
@@ -99,11 +92,11 @@ static int	read_line(int fd, char **file_content, char **buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*file_content;
-	char		*buffer;
-	char		*line;
+	static char		*file_content;
+	char			*buffer;
+	char			*res_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
 		return (NULL);
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
@@ -114,11 +107,9 @@ char	*get_next_line(int fd)
 		return (ft_free(&file_content));
 	}
 	ft_free(&buffer);
-	line = extract_line(file_content);
-	if (!line)
+	res_line = cut_line(file_content);
+	if (!res_line)
 		return (ft_free(&file_content));
-	file_content = remaining_stash(file_content);
-	return (line);
+	file_content = remain_stash(file_content);
+	return (res_line);
 }
-
-

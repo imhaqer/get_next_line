@@ -6,87 +6,80 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:35:42 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/06/21 15:56:33 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:25:13 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_calloc(size_t count, size_t size)
+size_t	ft_strlen(const char *str)
 {
-	void	*ptr;
-	size_t	total_size;
+	size_t	len;
 
-	total_size = count * size;
-	ptr = malloc(total_size);
-	if (!ptr)
-		return (NULL);
-	ft_bzero(ptr, total_size);
-	return (ptr);
+	if (!str)
+		return (0);
+	len = 0;
+	while (str[len] != '\0')
+		len++;
+	return (len);
 }
 
-void	ft_bzero(void *str, size_t len)
+char	*ft_strchr(const char *s, int c)
 {
-	unsigned char	*ptr;
-	size_t			i;
+	char	symb;
+	int		i;
 
-	ptr = str;
+	if (!s)
+		return (NULL);
+	symb = c;
 	i = 0;
-	while (i < len)
+	while (s[i] != '\0')
 	{
-		ptr[i] = '\0';
+		if (s[i] == symb)
+			return ((char *)&s[i]);
 		i++;
 	}
+	if (s[i] == symb)
+		return ((char *)&s[i]);
+	return (NULL);
 }
-size_t	ft_strlen(const char *c)
+
+char	*ft_strjoin(char *stash, char *buffer)
+{
+	char	*res;
+	int		i;
+	int		j;
+	size_t	len;
+
+	if (!stash && !buffer)
+		return (NULL);
+	len = ft_strlen(stash) + ft_strlen(buffer);
+	res = (char *)malloc((len + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	i = 0;
+	while (stash && stash[i] != 0)
+	{
+		res[i] = stash[i];
+		i++;
+	}
+	j = 0;
+	while (buffer && buffer[j] != 0)
+		res[i++] = buffer[j++];
+	res[len] = '\0';
+	return (res);
+}
+
+size_t	until_nl(char *stash)
 {
 	size_t	i;
 
+	if (!stash)
+		return (0);
 	i = 0;
-	while (c[i])
-	{
+	while (stash[i] != '\0' && stash[i] != '\n')
 		i++;
-	}
+	if (stash[i] == '\n')
+		i++;
 	return (i);
 }
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*new_str;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	new_str = (char *)malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!new_str)
-		return (NULL);
-	while (s1[i])
-	{
-		new_str[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
-		new_str[i] = s2[j];
-		i++;
-		j++;
-	}
-	new_str[i] = '\0';
-	return (new_str);
-}
-char	*ft_strchr(char const *str, int c)
-{
-	while (*str)
-	{
-		if (*str == (char)c)
-			return ((char *)str);
-		str++;
-	}
-	if (*str == (char)c)
-		return ((char *)str);
-	else
-		return (NULL);
-}
-
