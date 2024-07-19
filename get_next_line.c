@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 18:37:00 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/19 16:18:54 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:46:21 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	*remain_stash(char *stash)
 
 static int	read_line(int fd, char **file_content, char **buffer)
 {
-	char	*temp;
+	char	*new_string;
 	int		bytes_read;
 
 	bytes_read = 1;
@@ -81,11 +81,11 @@ static int	read_line(int fd, char **file_content, char **buffer)
 		if (bytes_read == -1)
 			return (-1);
 		(*buffer)[bytes_read] = '\0';
-		temp = ft_strjoin(*file_content, *buffer);
-		if (!temp)
+		new_string = ft_strjoin(*file_content, *buffer);
+		if (!new_string)
 			return (-1);
 		ft_free(file_content);
-		*file_content = temp;
+		*file_content = new_string;
 	}
 	return (0);
 }
