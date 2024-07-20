@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:15:31 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/20 13:58:42 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/20 14:09:22 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ char	*get_next_line(int fd);
 size_t	ft_strlen(const char *str);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char *stash, char *buffer);
-char	*ft_substr(char *stash, unsigned int start, size_t len);
 size_t	until_nl(char *stash);
 
 #endif
