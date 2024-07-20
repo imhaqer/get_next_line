@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 15:15:31 by hahamdan          #+#    #+#             */
-/*   Updated: 2024/07/19 16:24:57 by hahamdan         ###   ########.fr       */
+/*   Updated: 2024/07/20 13:55:44 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <limits.h>
 
 # ifndef BUFFER_SIZE
-#define BUFFER_SIZE 15
+#  godefine BUFFER_SIZE 
 # endif
 
 char	*get_next_line(int fd);
